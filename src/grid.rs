@@ -17,19 +17,56 @@ impl Grid {
     pub fn write_grid(&self) -> String {
         let mut grid = String::new();
 
-        let _end_of_column = self.height - 1;
+        let end_of_column = self.height.saturating_sub(1);
         let end_of_row = self.width.saturating_sub(1);
 
-        for y in 0..self.width {
+        for y in 0..self.height {
+            if y == 0 {
+                for x in 0..self.width {
+                    if x == 0 {
+                        grid.push_str("╭───┬");
+                    } else if x == end_of_row {
+                        grid.push_str("───╮");
+                    } else {
+                        grid.push_str("───┬");
+                    }
+                }
+                grid.push_str("\n");
+            }
+
             for x in 0..self.width {
-                if x == 0 && y == 0 {
-                    grid.push_str("╭───┬");
-                } else if x == end_of_row && y == 0 {
-                    grid.push_str("───╮");
-                } else if y == 0 {
-                    grid.push_str("───┬");
+                if x == 0 {
+                    grid.push_str("│   │");
+                } else if x == end_of_row {
+                    grid.push_str("   │");
+                } else {
+                    grid.push_str("   │");
                 }
             }
+
+            grid.push_str("\n");
+
+            for x in 0..self.width {
+                if y == end_of_column {
+                    if x == 0 {
+                        grid.push_str("╰───┴");
+                    } else if x == end_of_row {
+                        grid.push_str("───╯");
+                    } else {
+                        grid.push_str("───┴");
+                    }
+                } else {
+                    if x == 0 {
+                        grid.push_str("├───┼");
+                    } else if x == end_of_row {
+                        grid.push_str("───┤");
+                    } else {
+                        grid.push_str("───┼");
+                    }
+                }
+            }
+
+            grid.push_str("\n");
         }
 
         grid
