@@ -1,3 +1,5 @@
+use crate::point::Point;
+
 // Grid for representing a
 pub struct Grid {
     width: u8,
@@ -15,7 +17,7 @@ impl Grid {
     }
 
     /// Returns a string containing a grid
-    pub fn write_grid(&self) -> String {
+    pub fn write_grid(&self, points: Vec<Point>) -> String {
         let mut grid = String::new();
 
         let end_of_column = self.height.saturating_sub(1);
@@ -30,7 +32,11 @@ impl Grid {
             }
 
             for x in 0..self.width {
-                grid.push_str(self.next_row_segment(x, end_of_row, "│   │", "   │", "   │"));
+                if points.contains(&Point::new(x, y)) {
+                    grid.push_str(self.next_row_segment(x, end_of_row, "│ B │", " B │", " B │"));
+                } else {
+                    grid.push_str(self.next_row_segment(x, end_of_row, "│   │", "   │", "   │"));
+                }
             }
 
             grid.push_str("\n");
@@ -97,7 +103,8 @@ mod tests {
         // Testing with 4
         let grid = Grid::new(4, 1);
 
-        let expected_result = "╭───┬───┬───┬───╮\n│   │   │   │   │\n╰───┴───┴───┴───╯\n".to_owned();
+        let expected_result =
+            "╭───┬───┬───┬───╮\n│   │   │   │   │\n╰───┴───┴───┴───╯\n".to_owned();
 
         assert_eq!(expected_result, grid.write_grid());
 
