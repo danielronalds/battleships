@@ -53,6 +53,8 @@ impl Grid {
 
             grid.push('\n');
         }
+        grid.push_str(&self.column_letter_row());
+        grid.push('\n');
 
         grid
     }
@@ -97,7 +99,22 @@ impl Grid {
             return format!("{} ", axis_number);
         }
 
-        format!("{}  ", axis_number)
+        format!(" {} ", axis_number)
+    }
+
+    /// Returns the letter labels for the columns as a singular row
+    fn column_letter_row(&self) -> String {
+        let mut row = String::from("     ");
+
+        let mut current_letter_as_u8: u8 = 65;
+
+        for _ in 0..self.width {
+            let current_letter = current_letter_as_u8 as char;
+            row.push_str(&format!("{}   ", current_letter));
+            current_letter_as_u8 += 1;
+        }
+
+        row
     }
 }
 
