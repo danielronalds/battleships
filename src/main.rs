@@ -5,7 +5,7 @@ use grid::Grid;
 use point::Point;
 
 fn main() {
-    let grid = Grid::new(6, 6);
+    let grid = Grid::new(4, 4);
 
     let points = vec![
         Point::new(0, 1),

@@ -26,10 +26,12 @@ impl Grid {
         for y in 0..self.height {
             if y == 0 {
                 for x in 0..self.width {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "╭───┬", "───┬", "───╮"));
+                    grid.push_str(self.next_row_segment(x, end_of_row, "   ╭───┬", "───┬", "───╮"));
                 }
-                grid.push_str("\n");
+                grid.push('\n');
             }
+
+            grid.push_str(&self.row_number(y));
 
             for x in 0..self.width {
                 if points.contains(&Point::new(x, y)) {
@@ -39,17 +41,17 @@ impl Grid {
                 }
             }
 
-            grid.push_str("\n");
+            grid.push('\n');
 
             for x in 0..self.width {
                 if y == end_of_column {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "╰───┴", "───┴", "───╯"));
+                    grid.push_str(self.next_row_segment(x, end_of_row, "   ╰───┴", "───┴", "───╯"));
                 } else {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "├───┼", "───┼", "───┤"));
+                    grid.push_str(self.next_row_segment(x, end_of_row, "   ├───┼", "───┼", "───┤"));
                 }
             }
 
-            grid.push_str("\n");
+            grid.push('\n');
         }
 
         grid
@@ -80,6 +82,23 @@ impl Grid {
             middle_of_row
         }
     }
+
+    /// Returns the current row's number properly formatted, with two spaces after for a one digit
+    /// number and two spaces after a a two digit number.
+    ///
+    /// Parameters
+    /// y:   The current row
+    fn row_number(&self, y: u8) -> String {
+        let axis_number = self.height - y;
+
+        let two_digit_number = axis_number > 9;
+
+        if two_digit_number {
+            return format!("{} ", axis_number);
+        }
+
+        format!("{}  ", axis_number)
+    }
 }
 
 #[cfg(test)]
@@ -106,14 +125,14 @@ mod tests {
         let expected_result =
             "╭───┬───┬───┬───╮\n│   │   │   │   │\n╰───┴───┴───┴───╯\n".to_owned();
 
-        assert_eq!(expected_result, grid.write_grid());
+        assert_eq!(expected_result, grid.write_grid(Vec::new()));
 
         // testing with 3
         let grid = Grid::new(3, 1);
 
         let expected_result = "╭───┬───┬───╮\n│   │   │   │\n╰───┴───┴───╯\n".to_owned();
 
-        assert_eq!(expected_result, grid.write_grid());
+        assert_eq!(expected_result, grid.write_grid(Vec::new()));
     }
 
     #[test]
