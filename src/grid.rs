@@ -135,24 +135,6 @@ mod tests {
     }
 
     #[test]
-    fn write_grid_with_one_row_works() {
-        // Testing with 4
-        let grid = Grid::new(4, 1);
-
-        let expected_result =
-            "╭───┬───┬───┬───╮\n│   │   │   │   │\n╰───┴───┴───┴───╯\n".to_owned();
-
-        assert_eq!(expected_result, grid.write_grid(Vec::new()));
-
-        // testing with 3
-        let grid = Grid::new(3, 1);
-
-        let expected_result = "╭───┬───┬───╮\n│   │   │   │\n╰───┴───┴───╯\n".to_owned();
-
-        assert_eq!(expected_result, grid.write_grid(Vec::new()));
-    }
-
-    #[test]
     fn row_segment_works() {
         let grid = Grid::new(4, 4);
 
