@@ -26,6 +26,54 @@ impl Point {
     }
 }
 
+impl TryFrom<String> for Point {
+    type Error = &'static str;
+
+    /// Converts a string in the format (Column Letter)(Row Number) to a point
+    fn try_from(string: String) -> Result<Self, Self::Error> {
+        let x_char = match string.chars().nth(0) {
+            Some(x_letter) => x_letter,
+            None => return Err("You must guess!"),
+        };
+
+        let x = match letter_to_coordinate(x_char) {
+            Some(x) => x,
+            None => return Err("Character is non alphabetic!"),
+        };
+
+        let y: u8 = match string[1..2].parse() {
+            Ok(y) => y,
+            Err(_) => return Err("Failed to pass the Y portion of the coordinate, not numeric"),
+        };
+
+        let y: u8 = y.saturating_sub(1);
+
+        Ok(Point::new(x, y))
+    }
+}
+
+/// Converts the given coordinate to a coordinate. This function does convert the letter to it's
+/// upper varient. Returns None if the letter is nonalphabetic or fails to convert to a captital
+///
+/// Parameters
+/// letter:   The letter to convert
+fn letter_to_coordinate(letter: char) -> Option<u8> {
+    if !letter.is_alphabetic() {
+        return None;
+    }
+
+    let letter_upper = letter
+        .to_uppercase()
+        .collect::<Vec<char>>()
+        .first()?
+        .to_owned();
+
+    let letter_as_u8 = letter_upper as u8;
+    let letter_as_coordinate = letter_as_u8 - 65; // Taking away 65 as A in ascii is 65
+
+    Some(letter_as_coordinate)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -47,5 +95,18 @@ mod tests {
     fn y_works() {
         let point = Point::new(3, 2);
         assert_eq!(point.y(), point.y);
+    }
+
+    #[test]
+    fn letter_to_coordinate_works() {
+        assert_eq!(letter_to_coordinate('A'), Some(0));
+        assert_eq!(letter_to_coordinate('C'), Some(2));
+        assert_eq!(letter_to_coordinate('c'), Some(2));
+        assert_eq!(letter_to_coordinate('z'), Some(25));
+        assert_eq!(letter_to_coordinate('Z'), Some(25));
+
+        assert_eq!(letter_to_coordinate('-'), None);
+        assert_eq!(letter_to_coordinate('4'), None);
+        assert_eq!(letter_to_coordinate('^'), None);
     }
 }

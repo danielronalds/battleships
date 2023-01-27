@@ -29,50 +29,17 @@ pub fn new_game() {
             .read_line(&mut guess)
             .expect("Couldn't read line");
 
-        let x = letter_to_coordinate(guess.chars().nth(0).unwrap()).unwrap();
-        let y: u8 = guess[1..2].parse().unwrap();
-        let y: u8 = y.saturating_sub(1);
+        let guess = match Point::try_from(guess) {
+            Ok(guess) => guess,
+            Err(message) => {
+                eprintln!("{}", message);
+                continue;
+            }
+        };
 
-        println!("{x}, {y}");
+        println!("{}, {}", guess.x(), guess.y());
     }
-}
-
-/// Converts the given coordinate to a coordinate. This function does convert the letter to it's
-/// upper varient. Returns None if the letter is nonalphabetic or fails to convert to a captital
-///
-/// Parameters
-/// letter:   The letter to convert
-fn letter_to_coordinate(letter: char) -> Option<u8> {
-    if !letter.is_alphabetic() {
-        return None;
-    }
-
-    let letter_upper = letter
-        .to_uppercase()
-        .collect::<Vec<char>>()
-        .first()?
-        .to_owned();
-
-    let letter_as_u8 = letter_upper as u8;
-    let letter_as_coordinate = letter_as_u8 - 65; // Taking away 65 as A in ascii is 65
-
-    Some(letter_as_coordinate)
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn letter_to_coordinate_works() {
-        assert_eq!(letter_to_coordinate('A'), Some(0));
-        assert_eq!(letter_to_coordinate('C'), Some(2));
-        assert_eq!(letter_to_coordinate('c'), Some(2));
-        assert_eq!(letter_to_coordinate('z'), Some(25));
-        assert_eq!(letter_to_coordinate('Z'), Some(25));
-
-        assert_eq!(letter_to_coordinate('-'), None);
-        assert_eq!(letter_to_coordinate('4'), None);
-        assert_eq!(letter_to_coordinate('^'), None);
-    }
-}
+mod tests {}
