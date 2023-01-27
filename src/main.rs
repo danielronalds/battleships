@@ -1,13 +1,7 @@
-mod grid;
-mod point;
-
-use grid::Grid;
-use point::Point;
+use battleships::{grid::Grid, point::Point };
 
 fn main() {
-    let grid = Grid::new(10, 10);
-
-    let points = vec![
+    let _points = vec![
         Point::new(0, 1),
         Point::new(0, 2),
         Point::new(0, 3),
@@ -18,5 +12,5 @@ fn main() {
         Point::new(3, 3),
     ];
 
-    println!("{}", grid.write_grid(points));
+    battleships::new_game();
 }

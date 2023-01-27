@@ -17,7 +17,7 @@ impl Grid {
     }
 
     /// Returns a string containing a grid
-    pub fn write_grid(&self, points: Vec<Point>) -> String {
+    pub fn write_grid(&self, hits: &[Point], misses: &[Point]) -> String {
         let mut grid = String::new();
 
         let end_of_column = self.height.saturating_sub(1);
@@ -34,8 +34,10 @@ impl Grid {
             grid.push_str(&self.row_number(y));
 
             for x in 0..self.width {
-                if points.contains(&Point::new(x, y)) {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "│ B │", " B │", " B │"));
+                if misses.contains(&Point::new(x, y)) {
+                    grid.push_str(self.next_row_segment(x, end_of_row, "│ M │", " M │", " M │"));
+                } else if hits.contains(&Point::new(x, y)) { 
+                    grid.push_str(self.next_row_segment(x, end_of_row, "│ X │", " X │", " X │"));
                 } else {
                     grid.push_str(self.next_row_segment(x, end_of_row, "│   │", "   │", "   │"));
                 }
