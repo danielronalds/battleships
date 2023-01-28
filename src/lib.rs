@@ -1,5 +1,5 @@
+pub mod point;
 mod grid;
-mod point;
 
 pub const BOARD_SIZE: u8 = 10;
 
@@ -10,18 +10,18 @@ use grid::Grid;
 use point::Point;
 
 /// Creates a new game of battleships
-pub fn new_game() {
-    let game_over = false;
+pub fn new_game(battleships: Vec<Point>) {
+    let mut game_over = false;
 
     let grid = Grid::new(BOARD_SIZE, BOARD_SIZE);
 
-    let hits = Vec::<Point>::new();
-    let misses = Vec::<Point>::new();
+    let mut hits = Vec::<Point>::new();
+    let mut misses = Vec::<Point>::new();
 
     while !game_over {
         println!("{}", grid.write_grid(&hits, &misses));
 
-        println!("Guess in format [Column Letter][Row Number] for example: A2");
+        println!("Guess in format (Column Letter)(Row Number) for example: A2");
 
         let mut guess = String::new();
 
@@ -37,8 +37,17 @@ pub fn new_game() {
             }
         };
 
-        println!("{}, {}", guess.x(), guess.y());
+        match battleships.contains(&guess) {
+            true => hits.push(guess),
+            false => misses.push(guess),
+        }
+
+        if hits.len() == battleships.len() {
+            game_over = true;
+        }
     }
+
+    println!("{}\nYou won!", grid.write_grid(&hits, &misses));
 }
 
 #[cfg(test)]
