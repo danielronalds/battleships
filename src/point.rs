@@ -31,7 +31,7 @@ impl TryFrom<String> for Point {
 
     /// Converts a string in the format (Column Letter)(Row Number) to a point
     fn try_from(string: String) -> Result<Self, Self::Error> {
-        let x_char = match string.chars().nth(0) {
+        let x_char = match string.chars().next() {
             Some(x_letter) => x_letter,
             None => return Err("You must guess!"),
         };
@@ -41,12 +41,16 @@ impl TryFrom<String> for Point {
             None => return Err("Character is non alphabetic!"),
         };
 
-        let y: u8 = match string[1..2].parse() {
+        let y: u8 = match string[1..].trim().parse() {
             Ok(y) => y,
             Err(_) => return Err("Failed to pass the Y portion of the coordinate, not numeric"),
         };
 
         let y: u8 = y.saturating_sub(1);
+
+        if x >= crate::BOARD_SIZE || y >= crate::BOARD_SIZE {
+            return Err("Guess outside of bounds!");
+        }
 
         Ok(Point::new(x, y))
     }
