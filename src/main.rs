@@ -1,4 +1,4 @@
-use battleships::{ BattleshipGame, point::Point };
+use battleships::{point::Point, BattleshipGame};
 
 fn main() {
     let battleships = vec![
@@ -6,7 +6,7 @@ fn main() {
         Point::new(0, 1),
         Point::new(0, 2),
         Point::new(0, 3),
-        Point::new(0, 4)
+        Point::new(0, 4),
     ];
 
     let mut battleships_game = BattleshipGame::new(battleships);
