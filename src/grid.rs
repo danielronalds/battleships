@@ -88,7 +88,7 @@ impl Grid {
     }
 
     /// Returns the current row's number properly formatted, with two spaces after for a one digit
-    /// number and two spaces after a a two digit number.
+    /// number and two spaces after a two digit number.
     ///
     /// Parameters
     /// y:   The current row

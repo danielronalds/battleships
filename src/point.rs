@@ -57,7 +57,7 @@ impl TryFrom<String> for Point {
 }
 
 /// Converts the given coordinate to a coordinate. This function does convert the letter to it's
-/// upper varient. Returns None if the letter is nonalphabetic or fails to convert to a captital
+/// Upper variant. Returns None if the letter is non alphabetic or fails to convert to a capital
 ///
 /// Parameters
 /// letter:   The letter to convert
@@ -73,7 +73,7 @@ fn letter_to_coordinate(letter: char) -> Option<u8> {
         .to_owned();
 
     let letter_as_u8 = letter_upper as u8;
-    let letter_as_coordinate = letter_as_u8 - 65; // Taking away 65 as A in ascii is 65
+    let letter_as_coordinate = letter_as_u8 - 65; // Taking away 65 as A in ASCII is 65
 
     Some(letter_as_coordinate)
 }

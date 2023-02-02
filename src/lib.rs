@@ -34,6 +34,7 @@ impl BattleshipGame {
         }
     }
 
+    /// Plays a game of battleship
     pub fn play(&mut self) {
         loop {
             self.reset_screen();
@@ -50,34 +51,52 @@ impl BattleshipGame {
                 Ok(guess) => guess,
                 Err(message) => {
                     eprintln!("{}", message);
-                    self.lines_to_jump += 1;
+                    stdin().read_line(&mut String::new()).unwrap();
+                    self.lines_to_jump += 2;
                     continue;
                 }
             };
 
-            if self.battleships.contains(&guess) {
-                // Unwrap is safe here as we have confirmed that postion will return something as
-                // this code only runs if the guess is in battleships
-                let hit_index = self
-                    .battleships
-                    .iter()
-                    .position(|point| point == &guess)
-                    .unwrap();
-                self.hits.push(guess);
-                self.battleships.remove(hit_index);
-            } else if !self.hits.contains(&guess) {
-                self.misses.push(guess);
-            }
+            self.process_guess(guess);
 
-            if self.hits.len() == self.battleships_to_hit {
+            if self.game_over() {
                 break;
             }
         }
+
+        self.reset_screen();
 
         println!(
             "{}\nYou won!",
             self.grid.write_grid(&self.hits, &self.misses)
         );
+    }
+
+    /// Checks if the game is over, based on whether the number of hits is equal to the number of
+    /// battleships to hit
+    fn game_over(&self) -> bool {
+        self.hits.len() == self.battleships_to_hit
+    }
+
+    /// Figures out whether the guess was a hit or a miss, and then adds it to the appropriate
+    /// vector
+    ///
+    /// Parameters:
+    /// guess:   The players guess as a point
+    fn process_guess(&mut self, guess: Point) {
+        if self.battleships.contains(&guess) {
+            // Unwrap is safe here as we have confirmed that position will return something as
+            // this code only runs if the guess is in battleships
+            let hit_index = self
+                .battleships
+                .iter()
+                .position(|point| point == &guess)
+                .unwrap();
+            self.hits.push(guess);
+            self.battleships.remove(hit_index);
+        } else if !self.hits.contains(&guess) {
+            self.misses.push(guess);
+        }
     }
 
     /// Clears the screen from the cursor down
