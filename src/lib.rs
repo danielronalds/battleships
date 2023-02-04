@@ -47,7 +47,7 @@ impl BattleshipGame {
             stdin().read_line(&mut guess).expect("Couldn't read line");
             self.lines_to_jump += 2;
 
-            let guess = match Point::try_from(guess) {
+            let mut guess = match Point::try_from(guess) {
                 Ok(guess) => guess,
                 Err(message) => {
                     eprintln!("{}", message);
@@ -56,6 +56,8 @@ impl BattleshipGame {
                     continue;
                 }
             };
+
+            guess.invert();
 
             self.process_guess(guess);
 

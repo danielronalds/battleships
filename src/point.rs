@@ -24,6 +24,11 @@ impl Point {
     pub fn y(&self) -> u8 {
         self.y
     }
+
+    /// Inverts the y coordinate of the point, so that it is mapped correctly to the grid
+    pub fn invert(&mut self) {
+        self.y = 9_u8.saturating_sub(self.y);
+    }
 }
 
 impl TryFrom<String> for Point {
@@ -99,6 +104,13 @@ mod tests {
     fn y_works() {
         let point = Point::new(3, 2);
         assert_eq!(point.y(), point.y);
+    }
+
+    #[test]
+    fn point_invert_work() {
+        let mut point = Point::new(3, 2);
+        point.invert();
+        assert_eq!(point.y, 7);
     }
 
     #[test]
