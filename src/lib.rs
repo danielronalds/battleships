@@ -1,4 +1,5 @@
-mod grid;
+pub mod grid;
+pub mod ship_placer;
 pub mod point;
 
 pub const BOARD_SIZE: u8 = 10;

@@ -16,6 +16,16 @@ impl Grid {
         Self { width, height }
     }
 
+    /// Returns the grids width
+    pub fn width(&self) -> u8 {
+        self.width
+    }
+
+    /// Returns the grids height
+    pub fn height(&self) -> u8 {
+        self.height
+    }
+
     /// Returns a string containing a grid
     pub fn write_grid(&self, hits: &[Point], misses: &[Point]) -> String {
         let mut grid = String::new();

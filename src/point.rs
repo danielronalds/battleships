@@ -1,8 +1,8 @@
 /// Represents a 2d point
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Clone)]
 pub struct Point {
-    x: u8,
-    y: u8,
+    pub x: u8,
+    pub y: u8,
 }
 
 impl Point {
