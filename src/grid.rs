@@ -1,4 +1,5 @@
 use crate::point::Point;
+use colored::*;
 
 // Grid for representing a
 pub struct Grid {
@@ -36,7 +37,7 @@ impl Grid {
         for y in 0..self.height {
             if y == 0 {
                 for x in 0..self.width {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "   ╭───┬", "───┬", "───╮"));
+                    grid.push_str(&self.next_row_segment(x, end_of_row, "   ╭───┬".to_string(), "───┬".to_string(), "───╮".to_string()));
                 }
                 grid.push('\n');
             }
@@ -45,11 +46,18 @@ impl Grid {
 
             for x in 0..self.width {
                 if misses.contains(&Point::new(x, y)) {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "│ M │", " M │", " M │"));
+                    let beginining = format!("| {} |", "M".bright_yellow());
+                    let middle = format!(" {} |", "M".bright_yellow());
+                    let end = format!(" {} |", "M".bright_yellow());
+                    grid.push_str(&self.next_row_segment(x, end_of_row, beginining, middle, end));
                 } else if hits.contains(&Point::new(x, y)) { 
-                    grid.push_str(self.next_row_segment(x, end_of_row, "│ X │", " X │", " X │"));
+                    let beginining = format!("| {} |", "X".bold().bright_red());
+                    let middle = format!(" {} |", "X".bold().bright_red());
+                    let end = format!(" {} |", "X".bold().bright_red());
+                    grid.push_str(&self.next_row_segment(x, end_of_row, beginining, middle, end));
+                } else if hits.contains(&Point::new(x, y)) { 
                 } else {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "│   │", "   │", "   │"));
+                    grid.push_str(&self.next_row_segment(x, end_of_row, "│   │".to_string(), "   │".to_string(), "   │".to_string()));
                 }
             }
 
@@ -57,9 +65,9 @@ impl Grid {
 
             for x in 0..self.width {
                 if y == end_of_column {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "   ╰───┴", "───┴", "───╯"));
+                    grid.push_str(&self.next_row_segment(x, end_of_row, "   ╰───┴".to_string(), "───┴".to_string(), "───╯".to_string()));
                 } else {
-                    grid.push_str(self.next_row_segment(x, end_of_row, "   ├───┼", "───┼", "───┤"));
+                    grid.push_str(&self.next_row_segment(x, end_of_row, "   ├───┼".to_string(), "───┼".to_string(), "───┤".to_string()));
                 }
             }
 
@@ -84,16 +92,16 @@ impl Grid {
         &self,
         x: u8,
         max_x: u8,
-        beginning_of_row: &'static str,
-        middle_of_row: &'static str,
-        end_of_row: &'static str,
-    ) -> &'static str {
+        beginning_of_row: String,
+        middle_of_row: String,
+        end_of_row: String,
+    ) -> String {
         if x == 0 {
-            beginning_of_row
+            beginning_of_row.clone()
         } else if x == max_x {
-            end_of_row
+            end_of_row.clone()
         } else {
-            middle_of_row
+            middle_of_row.clone()
         }
     }
 
