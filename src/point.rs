@@ -15,16 +15,6 @@ impl Point {
         Self { x, y }
     }
 
-    /// Returns the x coordinate
-    pub fn x(&self) -> u8 {
-        self.x
-    }
-
-    /// Returns the y coordinate
-    pub fn y(&self) -> u8 {
-        self.y
-    }
-
     /// Inverts the y coordinate of the point, so that it is mapped correctly to the grid
     pub fn invert(&mut self) {
         self.y = 9_u8.saturating_sub(self.y);
@@ -92,18 +82,6 @@ mod tests {
         let point = Point::new(3, 2);
         assert_eq!(point.x, 3);
         assert_eq!(point.y, 2);
-    }
-
-    #[test]
-    fn x_works() {
-        let point = Point::new(3, 2);
-        assert_eq!(point.x(), point.x);
-    }
-
-    #[test]
-    fn y_works() {
-        let point = Point::new(3, 2);
-        assert_eq!(point.y(), point.y);
     }
 
     #[test]

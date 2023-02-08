@@ -1,6 +1,6 @@
-pub mod grid;
-pub mod ship_placer;
-pub mod point;
+mod grid;
+mod ship_placer;
+mod point;
 
 pub const BOARD_SIZE: u8 = 10;
 
@@ -23,10 +23,12 @@ pub struct BattleshipGame {
 
 impl BattleshipGame {
     /// Creates a new BattleshipGame instance
-    pub fn new(battleships: Vec<Point>) -> Self {
+    pub fn new() -> Self {
+        let grid = Grid::new(BOARD_SIZE, BOARD_SIZE);
+        let battleships = ship_placer::place_ships(&grid);
         let battleships_to_hit = battleships.len();
         Self {
-            grid: Grid::new(BOARD_SIZE, BOARD_SIZE),
+            grid,
             battleships,
             battleships_to_hit,
             hits: Vec::new(),
@@ -112,6 +114,12 @@ impl BattleshipGame {
         .unwrap();
 
         self.lines_to_jump = 0;
+    }
+}
+
+impl Default for BattleshipGame {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

@@ -15,6 +15,7 @@ const SHIPS_TO_PLACE: [i32; 5] = [5, 4, 3, 3, 2];
 /// tweak this
 const CHANCE_TO_GENERATE_BUFFER_POINTS: u8 = 90;
 
+/// Enum to represent ship direction
 enum ShipDirection {
     Horizontal,
     Vertical,
@@ -83,7 +84,7 @@ pub fn place_ships(grid: &Grid) -> Vec<Point> {
 }
 
 /// Determines if two vecs have any overlapping elements, returning true if so
-fn overlapping_elements(vec: &Vec<Point>, other_vec: &Vec<Point>) -> bool {
+fn overlapping_elements(vec: &Vec<Point>, other_vec: &[Point]) -> bool {
     for element in vec {
         if other_vec.contains(element) {
             return true;
@@ -122,7 +123,7 @@ fn new_buffer_points(ship: &[Point]) -> Vec<Point> {
     }
 
     // removing ship points
-    buffer_points.retain(|p| !ship.contains(&p));
+    buffer_points.retain(|p| !ship.contains(p));
 
     buffer_points
 }
