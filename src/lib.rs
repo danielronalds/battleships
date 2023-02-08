@@ -1,6 +1,6 @@
 mod grid;
-mod ship_placer;
 mod point;
+mod ship_placer;
 
 pub const BOARD_SIZE: u8 = 10;
 
@@ -38,7 +38,11 @@ impl BattleshipGame {
     }
 
     /// Plays a game of battleship
-    pub fn play(&mut self) {
+    pub fn play(&mut self, print_ships: bool) {
+        if print_ships {
+            println!("{}", self.grid.write_grid(&self.battleships, &self.misses));
+        }
+
         loop {
             self.reset_screen();
 
