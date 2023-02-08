@@ -11,6 +11,10 @@ use ShipDirection::*;
 /// larger ships last
 const SHIPS_TO_PLACE: [i32; 5] = [5, 4, 3, 3, 2];
 
+/// The chance to generate buffer_points for a ship after it has been added. Probably will need to
+/// tweak this
+const CHANCE_TO_GENERATE_BUFFER_POINTS: u8 = 90;
+
 enum ShipDirection {
     Horizontal,
     Vertical,
@@ -39,7 +43,7 @@ pub fn place_ships(grid: &Grid) -> Vec<Point> {
 
             let mut ship: Vec<Point> = vec![ship_point.clone()];
 
-            for _i in 0..ship_length {
+            for _i in 1..ship_length {
                 match random_direction {
                     Horizontal => {
                         ship_point.x += 1;
@@ -65,7 +69,11 @@ pub fn place_ships(grid: &Grid) -> Vec<Point> {
                 continue;
             }
 
-            buffer_points.append(&mut new_buffer_points(&ship));
+            // Adding buffer points for this ship only sometimes
+            if rand::thread_rng().gen_range(0..=100) <= CHANCE_TO_GENERATE_BUFFER_POINTS {
+                buffer_points.append(&mut new_buffer_points(&ship));
+            }
+
             battleships.append(&mut ship.clone());
             valid_ship = true;
         }
