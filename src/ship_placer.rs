@@ -28,6 +28,7 @@ impl Distribution<ShipDirection> for Standard {
 
 pub fn place_ships(grid: &Grid) -> Vec<Point> {
     let mut battleships: Vec<Point> = Vec::new();
+    let mut buffer_points: Vec<Point> = Vec::new();
 
     for ship_length in SHIPS_TO_PLACE {
         let mut valid_ship = false;
@@ -50,7 +51,9 @@ pub fn place_ships(grid: &Grid) -> Vec<Point> {
                 ship.push(ship_point.clone());
             }
 
-            if overlapping_elements(&battleships, &ship) {
+            if overlapping_elements(&battleships, &ship)
+                || overlapping_elements(&ship, &buffer_points)
+            {
                 // If the battleship contains even a single point then there is an overlap, and the
                 // ship is not valid... aka try again
                 continue;
@@ -58,19 +61,20 @@ pub fn place_ships(grid: &Grid) -> Vec<Point> {
 
             let last_point = ship.last().unwrap();
 
-            if  last_point.x >= grid.width() || last_point.y >= grid.height() {
+            if last_point.x >= grid.width() || last_point.y >= grid.height() {
                 continue;
             }
 
+            buffer_points.append(&mut new_buffer_points(&ship));
             battleships.append(&mut ship.clone());
             valid_ship = true;
         }
-
     }
 
     battleships
 }
 
+/// Determines if two vecs have any overlapping elements, returning true if so
 fn overlapping_elements(vec: &Vec<Point>, other_vec: &Vec<Point>) -> bool {
     for element in vec {
         if other_vec.contains(element) {
@@ -79,6 +83,40 @@ fn overlapping_elements(vec: &Vec<Point>, other_vec: &Vec<Point>) -> bool {
     }
 
     false
+}
+
+/// Generates buffer points for the passed in ship
+///
+/// Parameters
+/// ship:   The ship to generate buffer points for
+fn new_buffer_points(ship: &[Point]) -> Vec<Point> {
+    let mut buffer_points = Vec::new();
+
+    for point in ship {
+        let buffer_origin = point.clone();
+
+        let mut buffer_left = buffer_origin.clone();
+        buffer_left.x = buffer_left.x.saturating_sub(1);
+
+        let mut buffer_right = buffer_origin.clone();
+        buffer_right.x += 1;
+
+        let mut buffer_top = buffer_origin.clone();
+        buffer_top.y = buffer_top.y.saturating_sub(1);
+
+        let mut buffer_bottom = buffer_origin.clone();
+        buffer_bottom.y += 1;
+
+        buffer_points.push(buffer_left);
+        buffer_points.push(buffer_right);
+        buffer_points.push(buffer_top);
+        buffer_points.push(buffer_bottom);
+    }
+
+    // removing ship points
+    buffer_points.retain(|p| !ship.contains(&p));
+
+    buffer_points
 }
 
 /// Returns a new random_point within the given width and height
