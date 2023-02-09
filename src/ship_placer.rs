@@ -46,12 +46,8 @@ pub fn place_ships(grid: &Grid) -> Vec<Point> {
 
             for _i in 1..ship_length {
                 match random_direction {
-                    Horizontal => {
-                        ship_point.x += 1;
-                    }
-                    Vertical => {
-                        ship_point.y += 1;
-                    }
+                    Horizontal => ship_point.x += 1,
+                    Vertical => ship_point.y += 1,
                 }
                 ship.push(ship_point.clone());
             }

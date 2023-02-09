@@ -43,7 +43,7 @@ impl BattleshipGame {
             println!("{}", self.grid.write_grid(&self.battleships, &self.misses));
         }
 
-        loop {
+        while !self.game_over() {
             self.reset_screen();
 
             println!("{}", self.grid.write_grid(&self.hits, &self.misses));
@@ -67,10 +67,6 @@ impl BattleshipGame {
             guess.invert();
 
             self.process_guess(guess);
-
-            if self.game_over() {
-                break;
-            }
         }
 
         self.reset_screen();
